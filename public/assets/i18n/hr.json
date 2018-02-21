@@ -1,0 +1,27 @@
+{
+  "API": {
+    "URL": "http://cryptoplus.hr/api",
+    "DOMAIN": "http://cryptoplus.hr",
+    "TEST_URL": "http://test.cryptoplus.hr/api",
+    "TEST_DOMAIN": "http://test.cryptoplus.hr"
+  },
+  "PRICES": {
+    "PRICE": "cijena",
+    "SHORT": "KN",
+    "BUY": "Kupi",
+    "SELL": "Prodaj"
+  },
+  "HOME": {
+    "PRICES": {
+      "REFRESH": "Cijena se osvježava za {{v}} sekundi",
+      "CALCULATED_I": "Kako se računa cijena?",
+      "CALCULATED_II": "Kako se izračunava cijena?",
+      "CONTACT_TITLE": "Kontakt za prodaju i kupnju:",
+      "CONTACT_EMAIL": "info@cryptoplus.hr",
+      "CONTACT_MOBILE": "0957777089",
+      "CONTACT_COPMANY": "WEB DEVELOPMENT DOO, Zagreb",
+      "MODAL_INFO": "<p>Cijena je okvirna i osvježava se svakih 120 sekundi.</p><p>Cijena koju uzimamo pri prodaji i kupnji se računa tek nakon što sredstva koja ste uplatili budu vidljiva na našem žiro računu i tada se obavlja kupnja kriptovalute online ili nakon što se proces slanja kriptovalute koju ste poslali na naš wallet završi i proda za novčana sredstva online.</p><p>CryptoPlus uzima fiksnu proviziju od 5% od novčanog iznosa za uslugu kupnje i prodaje. Iznos provizije je već uračunat u prikazanu cijenu.</p>",
+      "API_ERROR": "Greška prilikom povezivanja, molimo pokušajte osvježiti stranicu."
+    }
+  }
+}

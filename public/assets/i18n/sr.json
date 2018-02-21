@@ -1,0 +1,27 @@
+{
+  "API": {
+    "URL": "http://cryptoplus.rs/api",
+    "DOMAIN": "http://cryptoplus.rs",
+    "TEST_URL": "http://test.cryptoplus.rs/api",
+    "TEST_DOMAIN": "http://test.cryptoplus.rs"
+  },
+  "PRICES": {
+    "PRICE": "cena",
+    "SHORT": "RSD",
+    "BUY": "Kupi",
+    "SELL": "Prodaj"
+  },
+  "HOME": {
+    "PRICES": {
+      "REFRESH": "Cena se osvežava za {{v}} sekundi",
+      "CALCULATED_I": "Kako se računa cena?",
+      "CALCULATED_II": "Kako se izračunava cena?",
+      "CONTACT_TITLE": "Kontakt za prodaju i kupovinu:",
+      "CONTACT_EMAIL": "info@cryptoplus.rs",
+      "CONTACT_MOBILE": "066 5047198",
+      "CONTACT_COPMANY": "CRYPTO PLUS DOO, Novi Sad",
+      "MODAL_INFO": "<p>Cena je okvirna i rekalkuliše se svakih 120 sekundi.</p><p>Cena koju uzimamo pri prodaji i kupovini se računa tek nakon što se proknjiže sredstva koja ste uplatili na našračun i realizuje kupovina kriptovalute online ili nakon što se proces slanja kriptovalute koju ste poslali na našwallet kompletira i proda za novčana sredstva online.</p><p>CryptoPlus uzima fiksnu proviziju od 5% od novčanog iznosa za uslugu kupovine i prodaje. Iznos provizije je već uračunat u prikazanu cenu.</p>",
+      "API_ERROR": "Greška prilikom povezivanja, molimo pokušajte osvežiti stranicu."
+    }
+  }
+}
