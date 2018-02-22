@@ -9,6 +9,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Payward\KrakenAPI;
 
 class CryptoCurrencyController extends Controller
@@ -36,6 +37,8 @@ class CryptoCurrencyController extends Controller
 
         $currency->name = $request->name;
         $currency->short_name = $request->short_name;
+        $currency->min_sell = 0.0;
+        $currency->min_buy = 0.0;
 
         $priceEur = $kraken->QueryPublic('Assets');
 
@@ -75,5 +78,31 @@ class CryptoCurrencyController extends Controller
         Session::flash('success', "Successfully deleted $currency->name crypto currency");
 
         return \Redirect::to('admin/currencies');
+    }
+
+    public function saveMinimums(Request $request){
+        $validator = Validator::make($request->all(),[
+            'min_buy' => 'required|numeric',
+            'min_sell' => 'required|numeric',
+            'short_name' => 'required|string'
+        ]);
+
+        if($validator->fails()){
+            $errors = $validator->errors();
+            Session::flash('error', $errors->first());
+            return \Redirect::to('admin/currencies');
+        }
+
+        $currency = CryptoCurrency::where('short_name', $request->short_name)->first();
+
+        $currency->min_buy = $request->min_buy;
+        $currency->min_sell = $request->min_sell;
+
+        $currency->save();
+
+        Session::flash('success', "Successfully updated $currency->name min values");
+
+        return \Redirect::to('admin/currencies');
+
     }
 }

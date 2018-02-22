@@ -23,9 +23,9 @@
                         @endif
                         <p>Molimo Vas da vodite računa prilikom slanja i unosa adrese Walleta i destination tag-a za Ripple.</p>
                         <p><strong>Za pogrešno unete adrese ne odgovaramo!!!</strong></p><br><br>
-                        <p><strong>Napomena: konačni obračun i konačna cena kriptovalute se obračunavaju u trenutku same prodaje, tj. nakon što kriptovaluta pristignu na naš wallet i nakon što se obavi prodaja kriptovalute.</strong></p>
+                        <p><strong>Napomena: konačni obračun i konačna cena kriptovalute se obračunavaju u trenutku same prodaje, tačnije nakon što kriptovaluta pristignu na naš wallet i nakon što se obavi prodaja kriptovalute.</strong></p>
                         <br><br><br>
-                        Web Development DOO, Jastrebarska 3, Zagreb
+                        Crypto Plus DOO, Novi Sad
                     </div>
                 </div>
             </div>

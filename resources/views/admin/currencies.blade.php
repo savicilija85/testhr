@@ -13,10 +13,25 @@
 
                     <div class="panel-body">
                         <div class="row">
-                <ul class="list-group">
+                            <table class="table table-bordered">
+                                <tbody>
                     @foreach($currencies as $currency)
-                        <li class="list-group-item">
+                        <tr>
+                        <td>
                             {{ $currency->name }} : {{ $currency->short_name }}
+                            {{ Form::open(['route' => 'admin.saveMinimums', 'method' => 'POST', 'class' => 'form-horizontal col-md-12']) }}
+                            <div class="form-inline">
+                            {{ Form::label('min_sell', "Min prodaja:") }}&nbsp&nbsp&nbsp
+                            {{ Form::text('min_sell', null, ['class' => 'form-control','required' => '', 'style' => 'width: 160px;', 'placeholder' => $currency->min_sell]) }}&nbsp{{ $currency->short_name }}
+                            </div>
+                            <br>
+                            <div class="form-inline">
+                            {{ Form::label('min_buy', 'Min kupovina:') }}
+                            {{ Form::text('min_buy', null, ['class' => 'form-control','required' => '', 'style' => 'width: 160px;', 'placeholder' => $currency->min_buy]) }}&nbspRSD
+                            </div>
+                            {{ Form::hidden('short_name', $currency->short_name) }}
+                            {{ Form::submit('Snimi', ['class' => 'btn btn-primary'])}}
+                            {{ Form::close() }}
                             <form action="{{route('admin.deleteCryptoCurrency', $currency->id)}}" method="POST"
                                   style="display: inline"
                                   onsubmit="return confirm('Are you sure you want to delete currency: {{$currency->name}} : {{ $currency->short_name }}?');">
@@ -24,9 +39,11 @@
                                 {{ csrf_field() }}
                                 <button class="btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span></button>
                             </form>
-                        </li>
+                        </td>
+                        </tr>
                     @endforeach
-                </ul>
+                                </tbody>
+                            </table>
             </div>
                     </div>
                 </div>

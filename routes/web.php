@@ -19,13 +19,13 @@ Route::get('/', 'PriceController@showPrice');
 //Route::post('/resendVerificationCode', 'Auth\RegisterController@resendVerificationCode')->name('resendVerificationCode');
 //Route::post('/idPictures', 'Auth\RegisterController@idPictures')->name('idPictures');
 
-//Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
 
 //Admin routes
 Route::get('admin/home', 'AdminController@index');
 Route::get('admin','Admin\LoginController@showLoginForm')->name('admin.showLogin');
 Route::post('admin', 'Admin\LoginController@login')->name('admin.login');
-
+Route::post('admin/logout', 'Admin\LoginController@logout')->name('admin.logout');
 //Admin users routes
 Route::get('admin/users', 'Admin\UsersController@index')->name('admin.users');
 Route::get('admin/users/view/{id}', 'Admin\UsersController@showUser')->name('admin.viewUser');
@@ -44,6 +44,7 @@ Route::post('admin/categories', 'Admin\CategoriesController@createCategory')->na
 //Admin crypto currencies routes
 Route::get('admin/currencies', 'Admin\CryptoCurrencyController@showCurrencies')->name('admin.showCurrencies');
 Route::post('admin/currencies', 'Admin\CryptoCurrencyController@createCryptoCurrency')->name('admin.createCryptoCurrency');
+Route::post('admin/currencies/minimums', 'Admin\CryptoCurrencyController@saveMinimums')->name('admin.saveMinimums');
 Route::delete('admin/currencies/{id}', 'Admin\CryptoCurrencyController@deleteCryptoCurrency')->name('admin.deleteCryptoCurrency');
 //Admin orders routes
 Route::get('admin/orders', 'Admin\OrderController@showOrders')->name('admin.showOrders');
@@ -63,11 +64,10 @@ Route::delete('admin/orders/{id}', 'Admin\OrderController@deleteOrder')->name('a
 //Route::get('user/buysell', 'BuySellController@showBuySell')->name('user.buysell');
 //Route::post('user/buysell', 'BuySellController@saveOrder')->name('user.buysell.saveOrder');
 
-//Route::get('price', 'PriceController@getPrice');
+Route::get('price', 'PriceController@getPrice');
 Route::get('/login', 'Auth\LoginController@refresh');
 Route::get('/registration', 'Auth\LoginController@refresh');
 Route::get('/buy', 'Auth\LoginController@refresh');
 Route::get('/buy-wallet', 'Auth\LoginController@refresh');
 Route::get('/buy-complete', 'Auth\LoginController@refresh');
-Route::get('/sell', 'Auth\LoginController@refresh');
-Route::get('/sell-complete', 'Auth\LoginController@refresh');
+Route::get('/buy-complete', 'Auth\LoginController@refresh');

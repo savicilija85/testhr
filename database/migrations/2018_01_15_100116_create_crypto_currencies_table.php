@@ -17,6 +17,8 @@ class CreateCryptoCurrenciesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('short_name');
+            $table->double('min_sell');
+            $table->double('min_buy');
             $table->timestamps();
         });
     }

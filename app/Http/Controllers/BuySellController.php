@@ -33,111 +33,173 @@ class BuySellController extends Controller
         return view('user.buysell', compact('currency'));
     }
 
+
+    /** User data for buy transaction
+     * @param array $requestData
+     * @param array $user
+     * @return array
+     */
+    private function buyData($requestData = [], $user = []){
+        $data = [
+            'name' => $user['data'][0]['user']['name'],
+            'email' => $user['data'][0]['user']['email'],
+            'phone' => $user['data'][0]['user']['phone'],
+            'address' => $requestData['address'],
+            'buy_sell' => $requestData['buy_sell'],
+            'quantity' => $requestData['quantity'],
+            'currency' => $requestData['currency'],
+            'outputCurrencyAmount' => $requestData['outputCurrencyAmount'],
+            'walletAddress' => $requestData['walletAddress'],
+        ];
+
+        return $data;
+    }
+
+    /** Validation for buy transaction
+     * @param array $data
+     * @return \Illuminate\Validation\Validator
+     */
+    private function buyValidator($data = []){
+
+        $validator = Validator::make($data, [
+            'address' => 'required|string',
+            'quantity' => 'required|numeric',
+            'currency' => 'required|string',
+            'outputCurrencyAmount' => 'required|numeric',
+            'walletAddress' => 'required|string'
+        ]);
+
+        return $validator;
+    }
+
+    /** Sending emails for buy transaction
+     * @param array $data
+     */
+    private function buySendEmails($data = []){
+        Mail::send('emails.buy_company', $data, function ($message) use ($data) {
+            $message->from('cryptoplusrs@gmail.com');
+            $message->to('cryptoplusrs@gmail.com');
+            $message->subject($data['buy_sell'] . ' ' . $data['name']);
+        });
+
+        Mail::send('emails.buy_user', $data, function($message) use ($data){
+            $message->from('cryptoplusrs@gmail.com');
+            $message->to($data['email']);
+            $message->subject('Crypto Plus - Detalji kupovine');
+        });
+    }
+
+    /** User data for sell transaction
+     * @param array $requestData
+     * @param array $user
+     * @return array|\Illuminate\Http\JsonResponse
+     */
+    private function sellData($requestData = [], $user = []){
+        try {
+
+            $wallet['wallet'] = Wallet::where('currency', $requestData['currency'])->value('wallet');
+            $wallet['destination_tag'] = Wallet::where('currency', $requestData['currency'])->value('destination_tag');
+
+        } catch (\Exception $e){
+
+            return response()->json(JsonResponse::response('error', [], $e->getMessage()), 500);
+        }
+
+        $data = [
+            'name' => $user['data'][0]['user']['name'],
+            'email' => $user['data'][0]['user']['email'],
+            'phone' => $user['data'][0]['user']['phone'],
+            'address' => $requestData['address'],
+            'buy_sell' => $requestData['buy_sell'],
+            'quantity' => $requestData['quantity'],
+            'currency' => $requestData['currency'],
+            'outputCurrencyAmount' => $requestData['outputCurrencyAmount'],
+            'bankAccount' => $requestData['bankAccount'],
+            'wallet' => $wallet['wallet'],
+            'destination_tag' => $wallet['destination_tag'],
+        ];
+
+        return $data;
+    }
+
+    /** Validation for sell transaction
+     * @param array $data
+     * @return \Illuminate\Validation\Validator
+     */
+    private function sellValidator($data = []){
+        $validator = Validator::make($data, [
+            'address' => 'required|string',
+            'quantity' => 'required|numeric',
+            'currency' => 'required|string',
+            'outputCurrencyAmount' => 'required|numeric',
+            //'bankAccount' => 'required|regex:/\d{3}[\-]\d{13}[\-]\d{2}/'
+        ]);
+
+        return $validator;
+    }
+
+    /** Sending emails for sell transaction
+     * @param array $data
+     */
+    private function sellSendEmails($data = []){
+        Mail::send('emails.sell_company', $data, function($message) use ($data){
+            $message->from('cryptoplusrs@gmail.com');
+            $message->to('cryptoplusrs@gmail.com');
+            $message->subject($data['buy_sell'] . ' ' . $data['name']);
+        });
+
+        Mail::send('emails.sell_user', $data, function($message) use ($data){
+            $message->from('cryptoplusrs@gmail.com');
+            $message->to($data['email']);
+            $message->subject('Crypto Plus - Detalji prodaje');
+        });
+    }
+
+    /** Saving orders to database and sending mails to users and company
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function saveOrderTest(Request $request){
         $user = $this->authenticateUser->getAuthenticatedUser();
         $user = $user->getData(true);
-
+        $validationData = $request->all();
         if($request->buy_sell == 'Kupovina') {
 
-            $validator = Validator::make($request->all(), [
-               'address' => 'required|string',
-               'quantity' => 'required|numeric',
-               'currency' => 'required|string',
-               'outputCurrencyAmount' => 'required|numeric',
-               'walletAddress' => 'required|string'
-            ]);
+            $validator = $this->buyValidator($validationData);
 
             if($validator->fails()){
                 $errors = $validator->errors();
-                return response()->json(JsonResponse::response('400', $validator->messages(), $errors->first()/*'Validation error'*/), 400);
+                return response()->json(JsonResponse::response('400',[] , $errors->first()), 400);
             }
 
-            $data = [
-                'name' => $user['data'][0]['user']['name'],
-                'email' => $user['data'][0]['user']['email'],
-                'phone' => $user['data'][0]['user']['phone'],
-                'address' => $request->address,
-                'buy_sell' => 'Kupnja',
-                'quantity' => $request->quantity,
-                'currency' => $request->currency,
-                'outputCurrencyAmount' => $request->outputCurrencyAmount,
-                'walletAddress' => $request->walletAddress
-            ];
+            $data = $this->buyData($validationData, $user);
 
-            Mail::send('emails.buy_company', $data, function ($message) use ($data, $request, $user) {
-                $message->from('cryptoplushr@gmail.com');
-                $message->to('cryptoplushr@gmail.com');
-                $message->subject($request->buy_sell . ' ' . $user['data'][0]['user']['name']);
-            });
-
-            Mail::send('emails.buy_user', $data, function($message) use ($data, $request, $user){
-               $message->from('cryptoplushr@gmail.com');
-               $message->to($data['email']);
-               $message->subject('Crypto Plus - Detalji kupnje');
-            });
+            $this->buySendEmails($data);
 
             return response()->json(JsonResponse::response('success', [], 'Order successful'), 200);
 
         } else if($request->buy_sell == 'Prodaja'){
 
-            $validator = Validator::make($request->all(), [
-                'address' => 'required|string',
-                'quantity' => 'required|numeric',
-                'currency' => 'required|string',
-                'outputCurrencyAmount' => 'required|numeric',
-                'bankAccount' => 'required'
-            ]);
+            $validator = $this->sellValidator($validationData);
 
             if($validator->fails()){
                 $errors = $validator->errors();
-                return response()->json(JsonResponse::response('400', $validator->messages(), $errors->first()/*'Validation error'*/), 400);
+                return response()->json(JsonResponse::response('400',[] , $errors->first()), 400);
             }
 
-            try {
+            $data = $this->sellData($validationData, $user);
 
-                $wallet['wallet'] = Wallet::where('currency', $request->currency)->value('wallet');
-                $wallet['destination_tag'] = Wallet::where('currency', $request->currency)->value('destination_tag');
+            $this->sellSendEmails($data);
 
-            } catch (\Exception $e){
-
-                return response()->json(JsonResponse::response('error', [], $e->getMessage()), 500);
-            }
-
-            $data = [
-                'name' => $user['data'][0]['user']['name'],
-                'email' => $user['data'][0]['user']['email'],
-                'phone' => $user['data'][0]['user']['phone'],
-                'address' => $request->address,
-                'buy_sell' => $request->buy_sell,
-                'quantity' => $request->quantity,
-                'currency' => $request->currency,
-                'outputCurrencyAmount' => $request->outputCurrencyAmount,
-                'bankAccount' => $request->bankAccount,
-                'wallet' => $wallet['wallet'],
-                'destination_tag' => $wallet['destination_tag'],
-            ];
-
-            Mail::send('emails.sell_company', $data, function($message) use ($data, $request, $user){
-                $message->from('cryptoplushr@gmail.com');
-                $message->to('cryptoplushr@gmail.com');
-                $message->subject($request->buy_sell . ' ' . $user['data'][0]['user']['name']);
-            });
-
-            Mail::send('emails.sell_user', $data, function($message) use ($data, $request, $user){
-                $message->from('cryptoplushr@gmail.com');
-                $message->to($data['email']);
-                $message->subject('Crypto Plus - Detalji prodaje');
-            });
-
-            return response()->json(JsonResponse::response('success', ['wallet' => $wallet], 'Order successful'), 200);
+            return response()->json(JsonResponse::response('success', ['wallet' => ['wallet' => $data['wallet'], 'destination_tag' => $data['destination_tag']]], 'Order successful'), 200);
         }
 
         return response()->json(JsonResponse::response('invalidrequest', [], 'Invalid request'), 400);
     }
 
 
-    /*
-     * Method for getting user accounts
+    /** Getting authenticated user accounts in format 123-1234567890123-12
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getAccounts(){
         $user = $this->authenticateUser->getAuthenticatedUser();
@@ -147,6 +209,10 @@ class BuySellController extends Controller
         return response()->json(JsonResponse::response('success', $data, 'The accounts have been successfully submitted'), 200);
 
     }
+
+    /** Getting name of authenticated user
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getName(){
         $user = $this->authenticateUser->getAuthenticatedUser();
         $user = $user->getData(true);

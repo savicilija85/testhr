@@ -23,15 +23,15 @@ Route::get('/', 'PriceController@getPrice')->middleware('cors');
 Route::options('/showVerificationCodePage', 'Auth\RegisterController@showVerificationCodePage')->middleware('cors');
 Route::post('/showVerificationCodePage', 'Auth\RegisterController@showVerificationCodePage')->middleware('cors');
 
-//Route::options('/registerUser', 'Auth\RegisterController@registerUser')->middleware('cors');
-Route::post('/registerUser', 'Auth\RegisterController@registerUser');//->middleware('cors');
+Route::options('/registerUser', 'Auth\RegisterController@registerUser')->middleware('cors');
+Route::post('/registerUser', 'Auth\RegisterController@registerUser')->middleware('cors');
 
 Route::post('/login', 'Auth\LoginController@login');
-Route::get('/login', 'Auth\LoginController@refresh');
 Route::post('/authenticate', 'Auth\LoginController@getAuthenticatedUser');
 
+//Route::post('/user/saveOrder', 'BuySellController@saveOrder');
 Route::post('/user/saveOrder', 'BuySellController@saveOrderTest');
 
 Route::get('/user/getAccounts', 'BuySellController@getAccounts');
 
-Route::get('/user/getName', 'BuySellController@getName');
+Route::get('/user/getName', 'UserController@getName');

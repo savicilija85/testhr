@@ -8,7 +8,7 @@
 
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
 
-                @foreach($currencies as $currency)
+                @forelse($currencies as $currency)
 
                     <div class="panel panel-info">
                         <div class="panel-heading">
@@ -59,8 +59,15 @@
                             </div>
                         </div>
                     </div>
-
-                @endforeach
+                    @empty
+                        <table class="table table-user-information">
+                            <tbody>
+                        <tr>
+                            <td colspan="11">No entries found.</td>
+                        </tr>
+                            </tbody>
+                        </table>
+                @endforelse
 
             </div>
         </div>

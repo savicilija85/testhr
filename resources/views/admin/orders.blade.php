@@ -17,7 +17,7 @@
             <th>Ukupan iznos</th>
             <th>Provizija</th>
             <th>PDV</th>
-            <th>Iznos za isplatu</th>
+            <th>Neto iznos</th>
             <th><span class="btn-success glyphicon glyphicon-ok"></span>/<span class="btn-danger glyphicon glyphicon-remove"></span></th>
             <th></th>
         </tr>

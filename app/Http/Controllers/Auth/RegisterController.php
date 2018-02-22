@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Mockery\Exception;
 use Twilio;
 use App\Account;
+use App\Classes\ZeroesOnAccountNumber;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
@@ -38,16 +39,18 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/home';
 
+    private $zeroesOnAccNumber;
     private $request;
 
     /**
      * RegisterController constructor.
      * @param Request $request
-     * 
+     * @param ZeroesOnAccountNumber $zeroesOnAccNumber
      */
-    public function __construct(Request $request)
+    public function __construct(ZeroesOnAccountNumber $zeroesOnAccNumber, Request $request)
     {
         $this->middleware('guest');
+        $this->zeroesOnAccNumber = $zeroesOnAccNumber;
         $this->request = $request;
     }
 
@@ -77,7 +80,10 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'required|regex:/[\+]\d{3}\d{2}\d{6}\d?/',
             'password' => 'required|string|min:6|confirmed',
-            //'accountArray.*' => 'required|string|digits:18'
+            //'accountArray.*' => 'required|string|digits:18',
+            'accountSmall.*' => 'required|digits:3',
+            'accountLarge.*' => 'required|digits:13',
+            'accountMini.*' => 'required|digits:2'
         ];
         return Validator::make($data, $rules, $messages);
     }
@@ -90,6 +96,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $accountArray = $this->zeroesOnAccNumber->concatAccountNumbers($data['accountSmall'],$data['accountLarge'],$data['accountMini']);
 
             $user = User::create([
                 'name' => $data['name'],
@@ -101,7 +108,7 @@ class RegisterController extends Controller
                 //'id_card_path_back' => $data['id_card_image_back'],
             ]);
 
-            foreach ($data['accountHr'] as $acc) {
+            foreach ($accountArray as $acc) {
                 $account = Account::create([
                     'user_id' => $user->id,
                     'account_no' => $acc,
@@ -167,9 +174,9 @@ class RegisterController extends Controller
                     ];
 
                     Mail::send('emails.send_user_credentials', $data, function ($message) use ($data) {
-                        $message->from('cryptoplushr@gmail.com');
+                        $message->from('cryptoplusrs@gmail.com');
                         $message->to($data['email']);
-                        $message->subject('Korisnički podaci -- Cryptoplus DOO');
+                        $message->subject('Korisnički podaci -- Crypto Plus Exchange');
                     });
 
 
@@ -214,6 +221,8 @@ class RegisterController extends Controller
 
         $verification_code = $this->sendVerificationCodeSms($request->phone);
         $data['verification_code'] = bcrypt($verification_code);
+        $accountArray = $this->zeroesOnAccNumber->concatAccountNumbers($request->accountSmall,$request->accountLarge,$request->accountMini);
+        $data['accountArray'] = $accountArray;
 
         return response()->json(JsonResponse::response('200', $data, 'success'));
         /*if(empty($data)){

@@ -36,7 +36,7 @@
                             </tr>
 
                             <tr>
-                                <td>Kupnja/Prodaja:</td>
+                                <td>Kupovina/Prodaja:</td>
                                 <td>{{ $buy_sell }}</td>
                             </tr>
 
