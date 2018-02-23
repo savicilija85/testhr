@@ -72,12 +72,11 @@ class PriceController extends Controller
 
         $data = json_decode($content, true);
         $eur = $data['result']['value'];
-        //Ovde umesto 0.05 uvesti proviziju iz baze za odredjenu kriptovalutu
+
         foreach ($this->resultCurrencyString() as $currency){
             if($currency == 'XXBT'){
                 $provisions = Provision::find(1);
                 $currencies = CryptoCurrency::where('short_name', $currency)->first();
-                $provisionBuy = 1 + ($provisions->{$currency . 'buy'} / 100);
                 $resRsd['sell']['BTC']['price'] = $eur * ($priceEur['result'][$currency . 'ZEUR']['c'][0] * (1 - ($provisions->{$currency . 'sell'} / 100)));
                 $resRsd['sell']['BTC']['name'] = $currencies->name;
                 $resRsd['sell']['BTC']['min'] = $currencies->min_sell;

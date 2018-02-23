@@ -8,8 +8,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
 use Mockery\Exception;
 use Twilio;
-use App\Account;
-use App\Classes\ZeroesOnAccountNumber;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Registered;
@@ -39,18 +37,15 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/home';
 
-    private $zeroesOnAccNumber;
     private $request;
 
     /**
      * RegisterController constructor.
      * @param Request $request
-     * @param ZeroesOnAccountNumber $zeroesOnAccNumber
      */
-    public function __construct(ZeroesOnAccountNumber $zeroesOnAccNumber, Request $request)
+    public function __construct(Request $request)
     {
         $this->middleware('guest');
-        $this->zeroesOnAccNumber = $zeroesOnAccNumber;
         $this->request = $request;
     }
 
@@ -80,11 +75,8 @@ class RegisterController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'required|regex:/[\+]\d{3}\d{2}\d{6}\d?/',
             'password' => 'required|string|min:6|confirmed',
-            //'accountArray.*' => 'required|string|digits:18',
-            'accountSmall.*' => 'required|digits:3',
-            'accountLarge.*' => 'required|digits:13',
-            'accountMini.*' => 'required|digits:2'
         ];
+
         return Validator::make($data, $rules, $messages);
     }
 
@@ -96,29 +88,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $accountArray = $this->zeroesOnAccNumber->concatAccountNumbers($data['accountSmall'],$data['accountLarge'],$data['accountMini']);
-
             $user = User::create([
                 'name' => $data['name'],
                 'username' => $data['username'],
                 'email' => $data['email'],
                 'phone' => $data['phone'],
                 'password' => bcrypt($data['password']),
-                //'id_card_path_front' => $data['id_card_image_front'],
-                //'id_card_path_back' => $data['id_card_image_back'],
             ]);
 
-            foreach ($accountArray as $acc) {
-                $account = Account::create([
-                    'user_id' => $user->id,
-                    'account_no' => $acc,
-                ]);
-                $account->save();
-            }
-            //$user->save();
-            return $user;
-
-
+        return $user;
     }
 
     /**Get request data
@@ -135,14 +113,10 @@ class RegisterController extends Controller
      */
     private function sendVerificationCodeSms($phone){
         $verification_code = $this->generateRandomNumber();
-        //$data = $this->generateRandomNumber($data);
-        //$phone = $data['phone'];
-        //$verification_code = $data['verification_code'];
-        //$data['verification_code'] = bcrypt($data['verification_code']);
         $message = 'Your verification code is: ' . $verification_code;
         try {
             Twilio::message($phone, $message);
-            //return $data;
+
             return $verification_code;
         } catch (Exception $e){
             return response()->json(JsonResponse::response('500', [], $e->getMessage()));
@@ -152,10 +126,9 @@ class RegisterController extends Controller
     /**
      * @return int
      */
-    private function generateRandomNumber(/*$data*/){
+    private function generateRandomNumber(){
         $verification_code = random_int(10000, 99999);
-        //$data['verification_code'] = $verification_code;
-        //return $data;
+
         return $verification_code;
     }
 
@@ -209,34 +182,19 @@ class RegisterController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function showVerificationCodePage(/*array $data = null*/Request $request){
+    public function showVerificationCodePage(Request $request){
         $validator = $this->validator($request->all());
 
         if($validator->fails()){
             $errors = $validator->errors();
-            return response()->json(JsonResponse::response('400', []/*$validator->messages()*/, $errors->first()), 400);
-            //return response()->json(JsonResponse::response('400', $validator->messages(), 'Validation error'), 400);
+            return response()->json(JsonResponse::response('400', [], $errors->first()), 400);
         }
-
 
         $verification_code = $this->sendVerificationCodeSms($request->phone);
         $data['verification_code'] = bcrypt($verification_code);
-        $accountArray = $this->zeroesOnAccNumber->concatAccountNumbers($request->accountSmall,$request->accountLarge,$request->accountMini);
-        $data['accountArray'] = $accountArray;
 
         return response()->json(JsonResponse::response('200', $data, 'success'));
-        /*if(empty($data)){
-            $data = $this->getRequestData();
-        }
-        if(!empty($data)){
-            if(empty($data['verification_code'])) {
-                $this->validator($data)->validate();
-                $data = $this->sendVerificationCodeSms($data);
-            }
-            return view('auth.smsVerify', compact('data'));
-        } else {
-            return \redirect('home');
-        }*/
+
     }
 
 
@@ -246,10 +204,10 @@ class RegisterController extends Controller
             'user_verification_code' => ['required','digits:5', new CryptedVerificationCodeValidation($data)],
         ]);
         if($validator->fails()){
-            return false;//response()->json(JsonResponse::response('400', [], 'Verification code validation error'));//view('auth.smsVerify', compact('data'))->withErrors($validator);
+            return false;
         }
 
-        return true;//view('auth.idPictures', compact('data'));
+        return true;
     }
 
     /**

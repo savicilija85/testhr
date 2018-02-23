@@ -27,7 +27,7 @@
                             <br>
                             <div class="form-inline">
                             {{ Form::label('min_buy', 'Min kupovina:') }}
-                            {{ Form::text('min_buy', null, ['class' => 'form-control','required' => '', 'style' => 'width: 160px;', 'placeholder' => $currency->min_buy]) }}&nbspRSD
+                            {{ Form::text('min_buy', null, ['class' => 'form-control','required' => '', 'style' => 'width: 160px;', 'placeholder' => $currency->min_buy]) }}&nbspKN
                             </div>
                             {{ Form::hidden('short_name', $currency->short_name) }}
                             {{ Form::submit('Snimi', ['class' => 'btn btn-primary'])}}
