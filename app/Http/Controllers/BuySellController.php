@@ -45,7 +45,7 @@ class BuySellController extends Controller
             'email' => $user['data'][0]['user']['email'],
             'phone' => $user['data'][0]['user']['phone'],
             'address' => $requestData['address'],
-            'buy_sell' => $requestData['buy_sell'],
+            'buy_sell' => 'Kupnja',
             'quantity' => $requestData['quantity'],
             'currency' => $requestData['currency'],
             'outputCurrencyAmount' => $requestData['outputCurrencyAmount'],
@@ -77,15 +77,15 @@ class BuySellController extends Controller
      */
     private function buySendEmails($data = []){
         Mail::send('emails.buy_company', $data, function ($message) use ($data) {
-            $message->from('cryptoplusrs@gmail.com');
-            $message->to('cryptoplusrs@gmail.com');
+            $message->from('cryptoplushr@gmail.com');
+            $message->to('cryptoplushr@gmail.com');
             $message->subject($data['buy_sell'] . ' ' . $data['name']);
         });
 
         Mail::send('emails.buy_user', $data, function($message) use ($data){
-            $message->from('cryptoplusrs@gmail.com');
+            $message->from('cryptoplushr@gmail.com');
             $message->to($data['email']);
-            $message->subject('Crypto Plus - Detalji kupovine');
+            $message->subject('Crypto Plus - Detalji kupnje');
         });
     }
 
@@ -132,7 +132,7 @@ class BuySellController extends Controller
             'quantity' => 'required|numeric',
             'currency' => 'required|string',
             'outputCurrencyAmount' => 'required|numeric',
-            //'bankAccount' => 'required|regex:/\d{3}[\-]\d{13}[\-]\d{2}/'
+            'bankAccount' => 'required'
         ]);
 
         return $validator;
@@ -143,13 +143,13 @@ class BuySellController extends Controller
      */
     private function sellSendEmails($data = []){
         Mail::send('emails.sell_company', $data, function($message) use ($data){
-            $message->from('cryptoplusrs@gmail.com');
-            $message->to('cryptoplusrs@gmail.com');
+            $message->from('cryptoplushr@gmail.com');
+            $message->to('cryptoplushr@gmail.com');
             $message->subject($data['buy_sell'] . ' ' . $data['name']);
         });
 
         Mail::send('emails.sell_user', $data, function($message) use ($data){
-            $message->from('cryptoplusrs@gmail.com');
+            $message->from('cryptoplushr@gmail.com');
             $message->to($data['email']);
             $message->subject('Crypto Plus - Detalji prodaje');
         });

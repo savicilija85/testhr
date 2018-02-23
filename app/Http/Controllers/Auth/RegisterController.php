@@ -174,7 +174,7 @@ class RegisterController extends Controller
                     ];
 
                     Mail::send('emails.send_user_credentials', $data, function ($message) use ($data) {
-                        $message->from('cryptoplusrs@gmail.com');
+                        $message->from('cryptoplushr@gmail.com');
                         $message->to($data['email']);
                         $message->subject('Korisnički podaci -- Crypto Plus Exchange');
                     });

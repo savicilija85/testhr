@@ -12,16 +12,16 @@
 
                 <div class="panel-body">
                     <div class="row">
-                        <p>Molimo Vas da uplatite {{ $outputCurrencyAmount }} dinara na:</p><br>
-                        <p><strong>Uplatilac:</strong> {{ $name }}</p>
-                        <p><strong>Primalac:</strong> Crypto Plus DOO, Novi Sad</p>
-                        <p><strong>Broj računa:</strong> 310-218098-87</p>
-                        <p><strong>Svrha uplate:</strong> Uplata po nalogu</p>
+                        <p>Molimo Vas da uplatite {{ $outputCurrencyAmount }} KN na:</p><br>
+                        <p><strong>Uplatitelj:</strong> {{ $name }}</p>
+                        <p><strong>Primatelj:</strong> Web Development DOO, Jastrebarska 3, Zagreb</p>
+                        <p><strong>Broj računa:</strong> HR4124020061100856655</p>
+                        <p><strong>Svrha uplate:</strong> Nalog za kupnju</p>
                         <p><strong>Iznos:</strong> {{ $outputCurrencyAmount }}</p>
-                        <p><strong>Poziv na broj:</strong> 221</p><br><hr>
-                        <p><strong>Napomena: konačni obračun i konačna cena kriptovalute se obračunavaju u trenutku same kupovine, tačnije nakon što sredstva pristignu na naš račun i nakon što se obavi kupovina kriptovalute.</strong></p>
+                        <br><hr>
+                        <p><strong>Napomena: konačni obračun i konačna cijena kriptovalute se obračunavaju u trenutku same kupnje, tj. nakon što sredstva pristignu na naš račun i nakon što se obavi kupnja kriptovalute.</strong></p>
                         <br><br><br>
-                        Crypto Plus DOO, Novi Sad
+                        Web Development DOO, Jastrebarska 3, Zagreb
                     </div>
                 </div>
             </div>

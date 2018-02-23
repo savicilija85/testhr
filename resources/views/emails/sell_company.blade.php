@@ -7,7 +7,7 @@
 
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">PODACI PORUDŽBINE</h3>
+                    <h3 class="panel-title">PODACI NARUDŽBE</h3>
                 </div>
 
                 <div class="panel-body">

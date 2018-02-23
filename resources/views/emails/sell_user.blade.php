@@ -12,7 +12,7 @@
 
                 <div class="panel-body">
                     <div class="row">
-                        <p>Molimo Vas da pošaljete tačno <strong>{{ $quantity }} {{ $currency }}</strong> na Wallet:</p><br>
+                        <p>Molimo Vas da pošaljete točno <strong>{{ $quantity }} {{ $currency }}</strong> na Wallet:</p><br>
                         @if($currency == 'XRP')
                         <p><strong>Wallet:</strong> {{ $wallet }}</p>
                         <p><strong>Destination Tag:</strong> {{ $destination_tag }}</p><br>
@@ -22,10 +22,10 @@
                         <hr>
                         @endif
                         <p>Molimo Vas da vodite računa prilikom slanja i unosa adrese Walleta i destination tag-a za Ripple.</p>
-                        <p><strong>Za pogrešno unete adrese ne odgovaramo!!!</strong></p><br><br>
-                        <p><strong>Napomena: konačni obračun i konačna cena kriptovalute se obračunavaju u trenutku same prodaje, tačnije nakon što kriptovaluta pristignu na naš wallet i nakon što se obavi prodaja kriptovalute.</strong></p>
+                        <p><strong>Za pogrešno unešene adrese ne odgovaramo!!!</strong></p><br><br>
+                        <p><strong>Napomena: konačni obračun i konačna cijena kriptovalute se obračunavaju u trenutku same prodaje, tj. nakon što kriptovaluta pristignu na naš wallet i nakon što se obavi prodaja kriptovalute.</strong></p>
                         <br><br><br>
-                        Crypto Plus DOO, Novi Sad
+                        Web Development DOO, Jastrebarska 3, Zagreb
                     </div>
                 </div>
             </div>

@@ -12,7 +12,7 @@
 
                 <div class="panel-body">
                     <div class="row">
-                        <p>Vaši pristupni podaci za portal Cryptoplus.rs su:</p><br>
+                        <p>Vaši pristupni podaci za portal Cryptoplus.hr su:</p><br>
 
                             <p><strong>Korisničko ime:</strong> {{ $username }}</p>
                             <p><strong>E-mail:</strong> {{ $email }}</p><br>
@@ -20,7 +20,7 @@
                             <br><hr>
 
                         <br><br><br>
-                        Crypto Plus DOO, Novi Sad
+                        Web Development DOO, Jastrebarska 3, Zagreb
                     </div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\JsonResponse;
 use App\CryptoCurrency;
+use App\Provision;
 use Illuminate\Http\Request;
 use Payward\KrakenAPI;
 use Payward\KrakenAPIException;
@@ -66,35 +67,39 @@ class PriceController extends Controller
 
         }
 
-        $url = 'https://api.kursna-lista.info/'.self::$api_id.'/kursna_lista/json';
+        $url = 'https://api.kursna-lista.info/'.self::$api_id.'/konvertor/eur/hrk/1';
         $content = file_get_contents($url);
 
         $data = json_decode($content, true);
-        $eur = $data['result']['eur']['sre'];
+        $eur = $data['result']['value'];
         //Ovde umesto 0.05 uvesti proviziju iz baze za odredjenu kriptovalutu
         foreach ($this->resultCurrencyString() as $currency){
             if($currency == 'XXBT'){
+                $provisions = Provision::find(1);
                 $currencies = CryptoCurrency::where('short_name', $currency)->first();
-                $resRsd['sell']['BTC']['price'] = $eur * ($priceEur['result'][$currency . 'ZEUR']['c'][0] * 0.95);
+                $provisionBuy = 1 + ($provisions->{$currency . 'buy'} / 100);
+                $resRsd['sell']['BTC']['price'] = $eur * ($priceEur['result'][$currency . 'ZEUR']['c'][0] * (1 - ($provisions->{$currency . 'sell'} / 100)));
                 $resRsd['sell']['BTC']['name'] = $currencies->name;
                 $resRsd['sell']['BTC']['min'] = $currencies->min_sell;
-                $resRsd['buy']['BTC']['price'] = $eur * ($priceEur['result'][$currency . 'ZEUR']['c'][0] * 1.05);
+                $resRsd['buy']['BTC']['price'] = $eur * ($priceEur['result'][$currency . 'ZEUR']['c'][0] * (1 + ($provisions->{$currency . 'buy'} / 100)));
                 $resRsd['buy']['BTC']['name'] = $currencies->name;
                 $resRsd['buy']['BTC']['min'] = $currencies->min_buy;
             } elseif($currency[0] == 'X') {
+                $provisions = Provision::find(1);
                 $currencies = CryptoCurrency::where('short_name', $currency)->first();
-                $resRsd['sell'][substr($currency, 1)]['price'] = $eur * ($priceEur['result'][$currency . 'ZEUR']['c'][0] * 0.95);
+                $resRsd['sell'][substr($currency, 1)]['price'] = $eur * ($priceEur['result'][$currency . 'ZEUR']['c'][0] * (1 - ($provisions->{$currency . 'sell'} / 100)));
                 $resRsd['sell'][substr($currency, 1)]['name'] = $currencies->name;
                 $resRsd['sell'][substr($currency, 1)]['min'] = $currencies->min_sell;
-                $resRsd['buy'][substr($currency, 1)]['price'] = $eur * ($priceEur['result'][$currency . 'ZEUR']['c'][0] * 1.05);
+                $resRsd['buy'][substr($currency, 1)]['price'] = $eur * ($priceEur['result'][$currency . 'ZEUR']['c'][0] * (1 + ($provisions->{$currency . 'buy'} / 100)));
                 $resRsd['buy'][substr($currency, 1)]['name'] = $currencies->name;
                 $resRsd['buy'][substr($currency, 1)]['min'] = $currencies->min_buy;
             } else {
+                $provisions = Provision::find(1);
                 $currencies = CryptoCurrency::where('short_name', $currency)->first();
-                $resRsd['sell'][$currency]['price'] = $eur * ($priceEur['result'][$currency . 'EUR']['c'][0] * 0.95);
+                $resRsd['sell'][$currency]['price'] = $eur * ($priceEur['result'][$currency . 'EUR']['c'][0] * (1 - ($provisions->{$currency . 'sell'} / 100)));
                 $resRsd['sell'][$currency]['name'] = $currencies->name;
                 $resRsd['sell'][$currency]['min'] = $currencies->min_sell;
-                $resRsd['buy'][$currency]['price'] = $eur * ($priceEur['result'][$currency . 'EUR']['c'][0] * 1.05);
+                $resRsd['buy'][$currency]['price'] = $eur * ($priceEur['result'][$currency . 'EUR']['c'][0] * (1 + ($provisions->{$currency . 'buy'} / 100)));
                 $resRsd['buy'][$currency]['name'] = $currencies->name;
                 $resRsd['buy'][$currency]['min'] = $currencies->min_buy;
             }
