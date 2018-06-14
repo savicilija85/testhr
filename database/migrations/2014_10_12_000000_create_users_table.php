@@ -22,6 +22,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('id_card_path_front');
             $table->string('id_card_path_back');
+            $table->string('id_card_path_selfie');
+            $table->enum('verified', ['uploaded', 'verificated']);
             $table->rememberToken();
             $table->timestamps();
         });

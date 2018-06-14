@@ -34,6 +34,9 @@ Route::post('admin/users/edit/{id}', 'Admin\UsersController@editUser');
 Route::delete('admin/users/{id}', 'Admin\UsersController@deleteUser')->name('admin.deleteUser');
 Route::get('admin/useridimagefront/{id}', 'Admin\UsersController@getUserIdCardImageFront')->name('admin.getUserIdCardImageFront');
 Route::get('admin/useridimageback/{id}', 'Admin\UsersController@getUserIdCardImageBack')->name('admin.getUserIdCardImageBack');
+Route::get('admin/useridimageselfie/{id}', 'Admin\UsersController@getUserIdCardImageSelfie')->name('admin.getUserIdCardImageSelfie');
+Route::post('admin/users/edit/verified/{id}', 'Admin\UsersController@updateVerifiedUser')->name('admin.updateVerifiedUser');
+Route::post('admin/users/edit/denied/{id}', 'Admin\UsersController@denyVerifiedUser')->name('admin.denyVerifiedUser');
 //Admin provision routes
 Route::get('admin/provision', 'Admin\ProvisionController@showProvision')->name('admin.showProvision');
 Route::post('admin/provision', 'Admin\ProvisionController@saveProvision')->name('admin.saveProvision');
@@ -51,6 +54,10 @@ Route::get('admin/orders', 'Admin\OrderController@showOrders')->name('admin.show
 Route::put('admin/orders/{id}', 'Admin\OrderController@updateOrder')->name('admin.updateOrder');
 Route::post('admin/orders/{id}', 'Admin\OrderController@updateOrderSuccess')->name('admin.updateOrderSuccess');
 Route::delete('admin/orders/{id}', 'Admin\OrderController@deleteOrder')->name('admin.deleteOrder');
+//Admin send Email and SMS
+Route::get('admin/email_sms', 'Admin\EmailAndSmsController@showEmailSms')->name('admin.showEmailSMS');
+Route::post('admin/email_send', 'Admin\EmailAndSmsController@sendEmail')->name('admin.sendEmail');
+Route::post('admin/sms_send', 'Admin\EmailAndSmsController@sendSms')->name('admin.sendSms');
 
 //User routes
 //Route::get('user/myAccount', 'UserController@index')->name('user.myAccount');
@@ -71,3 +78,4 @@ Route::get('/buy', 'Auth\LoginController@refresh');
 Route::get('/buy-wallet', 'Auth\LoginController@refresh');
 Route::get('/buy-complete', 'Auth\LoginController@refresh');
 Route::get('/buy-complete', 'Auth\LoginController@refresh');
+Route::get('/reset-password/{token}', 'Auth\LoginController@refresh');

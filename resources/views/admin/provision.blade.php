@@ -8,6 +8,16 @@
 
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
 
+                @if($provisions === null)
+                    <table class="table table-user-information">
+                        <tbody>
+                        <tr>
+                            <td colspan="11">No entries found.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                @else
+
                 @forelse($currencies as $currency)
 
                     <div class="panel panel-info">
@@ -68,7 +78,7 @@
                             </tbody>
                         </table>
                 @endforelse
-
+                    @endif
             </div>
         </div>
     </div>

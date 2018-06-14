@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\UserResetPasswordNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -15,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email','phone', 'password', 'id_card_path_front', 'id_card_path_back',
+        'name', 'username', 'email','phone', 'password', 'id_card_path_front', 'id_card_path_back', 'id_card_path_selfie', 'verified'
     ];
 
     /**
@@ -33,5 +34,10 @@ class User extends Authenticatable
 
     public function orders(){
         return $this->hasMany(Order::class);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new UserResetPasswordNotification($token));
     }
 }

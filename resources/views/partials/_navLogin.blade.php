@@ -7,11 +7,10 @@
                 <li class="{{Request::is('admin/home') ? "active" : ""}}"><a href="{{url('admin/home')}}">Home <span class="sr-only">(current)</span></a></li>
                 <li class="{{Request::is('admin/users') ? "active" : ""}}"><a href="{{ route('admin.users') }}">Korisnici</a></li>&nbsp;
                 <li class="{{Request::is('admin/provision') ? "active" : ""}}"><a href="{{ route('admin.showProvision') }}">Provizije</a></li>
-                <li class="{{Request::is('admin/categories') ? "active" : ""}}"><a href="{{ route('admin.showCategories') }}">Kategorije</a></li>
                 <li class="{{Request::is('admin/currencies') ? "active" : ""}}"><a href="{{ route('admin.showCurrencies') }}">Kripto Valute</a></li>
                 <li class="{{Request::is('admin/orders') ? "active" : ""}}"><a href="{{ route('admin.showOrders') }}">Porudžbine</a></li>
-                <li class="{{Request::is('admin/orders') ? "active" : ""}}"><a href="{{ route('admin.showOrders') }}">Podešavanja</a></li>
-                <li class="{{Request::is('admin/orders') ? "active" : ""}}"><a href="{{ route('admin.showOrders') }}">Wallet-i</a></li>
+                <li class="{{Request::is('admin/email_sms') ? "active" : ""}}"><a href="{{ route('admin.showEmailSMS') }}">Pošalji Email ili SMS</a></li>
+
         </ul>
                 <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
@@ -36,9 +35,9 @@
                 </ul>
             @elseif(Auth::user() instanceof App\User)
 
-                <li class="{{Request::is('home') ? "active" : ""}}"><a href="{{url('home')}}">Home <span class="sr-only">(current)</span></a></li>
+                {{--<li class="{{Request::is('home') ? "active" : ""}}"><a href="{{url('home')}}">Home <span class="sr-only">(current)</span></a></li>
                 <li class="{{Request::is('user/myAccount') ? "active" : ""}}"><a href="{{route('user.myAccount')}}">Moj Nalog</a></li>
-                <li class="{{Request::is('user/buysell') ? "active" : ""}}"><a href="{{route('user.buysell')}}">Kupovina/Prodaja</a></li>
+                <li class="{{Request::is('user/buysell') ? "active" : ""}}"><a href="{{route('user.buysell')}}">Kupovina/Prodaja</a></li>--}}
 
             </ul>
             <ul class="nav navbar-nav navbar-right">

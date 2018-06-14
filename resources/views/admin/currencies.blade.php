@@ -27,7 +27,7 @@
                             <br>
                             <div class="form-inline">
                             {{ Form::label('min_buy', 'Min kupovina:') }}
-                            {{ Form::text('min_buy', null, ['class' => 'form-control','required' => '', 'style' => 'width: 160px;', 'placeholder' => $currency->min_buy]) }}&nbspKN
+                            {{ Form::text('min_buy', null, ['class' => 'form-control','required' => '', 'style' => 'width: 160px;', 'placeholder' => $currency->min_buy]) }}&nbspRSD
                             </div>
                             {{ Form::hidden('short_name', $currency->short_name) }}
                             {{ Form::submit('Snimi', ['class' => 'btn btn-primary'])}}
@@ -82,7 +82,7 @@
 
                     <ul class="list-group">
                         @foreach(array_keys($cryptoCurrencies) as $price)
-                            @if ($price !== 'XXLM' && $price !== 'XXDG' && $price !== 'USDT' && $price !== 'XMLN' && $price !== 'XICN' && $price !== 'EOS' && $price !== 'GNO' && $price !== 'KFEE' && $price[0] !== 'Z')
+                            @if ($price !== 'XXDG' && $price !== 'USDT' && $price !== 'XMLN' && $price !== 'XICN' && $price !== 'EOS' && $price !== 'GNO' && $price !== 'KFEE' && $price[0] !== 'Z')
                             <li class="list-group-item">
                                 {{ $price }}
                             </li>

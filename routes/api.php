@@ -35,3 +35,12 @@ Route::post('/user/saveOrder', 'BuySellController@saveOrderTest');
 Route::get('/user/getAccounts', 'BuySellController@getAccounts');
 
 Route::get('/user/getName', 'UserController@getName');
+
+Route::post('/send-reset-email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.reset');
+Route::post('/reset-password', 'Auth\ResetPasswordController@reset')->name('reset.password');
+
+Route::options('/user/saveIdCardsImages', 'UserController@saveIdCardsImages')->middleware('cors');
+Route::post('/user/saveIdCardsImages', 'UserController@saveIdCardsImages')->middleware('cors');
+
+Route::options('/user/getVerifiedStatus', 'UserController@getVerifiedStatus')->middleware('cors');
+Route::get('/user/getVerifiedStatus', 'UserController@getVerifiedStatus')->middleware('cors');

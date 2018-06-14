@@ -6,7 +6,8 @@ use App\Classes\JsonResponse;
 use App\Classes\OrderFunctions;
 use App\Classes\ZeroesOnAccountNumber;
 use App\CryptoCurrency;
-use App\User;
+use App\Order;
+use App\Provision;
 use App\Http\Controllers\Auth\LoginController;
 use App\Wallet;
 use Illuminate\Http\Request;
@@ -45,11 +46,12 @@ class BuySellController extends Controller
             'email' => $user['data'][0]['user']['email'],
             'phone' => $user['data'][0]['user']['phone'],
             'address' => $requestData['address'],
-            'buy_sell' => 'Kupnja',
+            'buy_sell' => $requestData['buy_sell'],
             'quantity' => $requestData['quantity'],
             'currency' => $requestData['currency'],
             'outputCurrencyAmount' => $requestData['outputCurrencyAmount'],
             'walletAddress' => $requestData['walletAddress'],
+            'destination_tag' => $requestData['destination_tag']
         ];
 
         return $data;
@@ -70,6 +72,33 @@ class BuySellController extends Controller
         ]);
 
         return $validator;
+    }
+
+    private function buySaveOrder($data = [], $user){
+        $order = new Order();
+        $currency = $data['currency'];
+        if($currency == 'BTC'){
+            $currency = 'XXBT';
+        } else {
+            $currency = 'X' . $currency;
+        }
+
+        $provision = Provision::find(1);
+
+        $order->user_id = $user['data'][0]['user']['id'];
+        $order->address = $data['address'];
+        $order->buy_sell = $data['buy_sell'];
+        $order->wallet = $data['walletAddress'];
+        $order->destination_tag = $data['destination_tag'];
+        $order->quantity = $data['quantity'];
+        $order->currency = $currency;
+        $order->sum = $data['outputCurrencyAmount'] * (1 + ($provision->{$currency} / 100));
+        $order->provision = $this->orderFunctions->calculateProvision($order->sum,$provision,$currency,$order->buy_sell);
+        $order->pdv = $this->orderFunctions->calculatePdv($order->provision);
+        $order->amount = $order->sum - $order->provision;
+        $order->success = 0;
+
+        $order->save();
     }
 
     /** Sending emails for buy transaction
@@ -132,10 +161,35 @@ class BuySellController extends Controller
             'quantity' => 'required|numeric',
             'currency' => 'required|string',
             'outputCurrencyAmount' => 'required|numeric',
-            'bankAccount' => 'required'
+            'bankAccount' => 'required|regex:/\d{3}[\-]\d{13}[\-]\d{2}/'//regex:/[HR]\d{13}/
         ]);
 
         return $validator;
+    }
+
+    private function sellSaveOrder($data = [], $user){
+        $order = new Order();
+        $currency = $data['currency'];
+        if($currency == 'BTC'){
+            $currency = 'XXBT';
+        } else {
+            $currency = 'X' . $currency;
+        }
+
+        $provision = Provision::find(1);
+
+        $order->user_id = $user['data'][0]['user']['id'];
+        $order->address = $data['address'];
+        $order->buy_sell = $data['buy_sell'];
+        $order->quantity = $data['quantity'];
+        $order->currency = $currency;
+        $order->sum = $data['outputCurrencyAmount'] * (1 + ($provision->{$currency} / 100));
+        $order->provision = $this->orderFunctions->calculateProvision($order->sum,$provision,$currency,$order->buy_sell);
+        $order->pdv = $this->orderFunctions->calculatePdv($order->provision);
+        $order->amount = $order->sum - $order->provision;
+        $order->success = 0;
+
+        $order->save();
     }
 
     /** Sending emails for sell transaction
@@ -172,6 +226,14 @@ class BuySellController extends Controller
                 return response()->json(JsonResponse::response('400',[] , $errors->first()), 400);
             }
 
+            try{
+
+                $this->buySaveOrder($validationData, $user);
+
+            } catch (\Exception $e){
+                return response()->json(JsonResponse::response('error', [], $e->getMessage()), 500);
+            }
+
             $data = $this->buyData($validationData, $user);
 
             $this->buySendEmails($data);
@@ -185,6 +247,14 @@ class BuySellController extends Controller
             if($validator->fails()){
                 $errors = $validator->errors();
                 return response()->json(JsonResponse::response('400',[] , $errors->first()), 400);
+            }
+
+            try{
+
+                $this->sellSaveOrder($validationData, $user);
+
+            } catch (\Exception $e){
+                return response()->json(JsonResponse::response('error', [], $e->getMessage()), 500);
             }
 
             $data = $this->sellData($validationData, $user);
